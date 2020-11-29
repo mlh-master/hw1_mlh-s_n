@@ -6,6 +6,8 @@ from sklearn.linear_model import LogisticRegression
 import pandas as pd
 import scipy.stats as stats
 from clean_data import norm_standard as nsd
+from clean_data import norm_standard as nsd
+from clean_data import rm_outlier
 
 
 def pred_log(logreg, X_train, y_train, X_test, flag=False):
@@ -18,9 +20,14 @@ def pred_log(logreg, X_train, y_train, X_test, flag=False):
     :param flag: A boolean determining whether to return the predicted he probabilities of the classes (relevant after Q11)
     :return: A two elements tuple containing the predictions and the weightning matrix
     """
-    # ------------------ IMPLEMENT YOUR CODE HERE:-----------------------------
 
-    # -------------------------------------------------------------------------
+    w_log = logreg.fit(X_train, y_train)
+    y_pred_log = np.argmax(w_log.predict_proba(X_test), axis = 1)
+    y_pred_log += 1
+    w_log = w_log.coef_
+    w_log = pd.DataFrame(w_log,columns=X_train.columns)
+
+
     return y_pred_log, w_log
 
 
@@ -97,8 +104,8 @@ def odds_ratio(w, X, selected_feat='LB'):
     :return: odds: median odds of all patients for the selected feature and label
              odds_ratio: the odds ratio of the selected feature and label
     """
-    # ------------------ IMPLEMENT YOUR CODE HERE:-----------------------------
 
-    # --------------------------------------------------------------------------
+    odd_ratio = np.exp(w.at[0,selected_feat])
+    odds = np.median(np.exp(X @ np.transpose(w.iloc[0,:])))
 
-    return odds, odd_ratio
+    return odds , odd_ratio
