@@ -139,9 +139,9 @@ if __name__ == '__main__':
 
     selected_feat = ('LB', 'ASTV')
     orig = nsd(CTG_features, selected_feat, flag=False)
-    nsd_std = nsd(CTG_features, selected_feat, mode='standard', flag=False)
-    nsd_norm = nsd(CTG_features, selected_feat, mode='MinMax', flag=False)
-    nsd_norm_mean = nsd(CTG_features, selected_feat, mode='mean', flag=False)
+    nsd_std = nsd(CTG_features, selected_feat, mode='standard', flag=True)
+    nsd_norm = nsd(CTG_features, selected_feat, mode='MinMax', flag=True)
+    nsd_norm_mean = nsd(CTG_features, selected_feat, mode='mean', flag=True)
 
 
     #####################################
@@ -188,31 +188,31 @@ if __name__ == '__main__':
     print("F1 score is: " + str("{0:.2f}".format(100 * metrics.f1_score(y_test, y_pred, average='macro'))) + "%")
 
     #####################################
-    #
+
     selected_feat = 'LB'
 
     odds, ratio = odds_ratio(w, X_train, selected_feat=selected_feat)  # you have to fill
 
     print(f'The odds ratio of {selected_feat} for Normal is {ratio}')
     print(f"The median odds to be labeled as 'Normal' is {odds}")
-    #
-    # #####################################
-    #
+
+    #####################################
+
     mode = 'MinMax'  # choose a mode from the `nsd`
-    X_train = nsd(X_train, selected_feat=('DP', 'ASTV'), mode='standard', flag=False)
-    X_test = nsd(X_test, selected_feat=('DP', 'ASTV'), mode='standard', flag=False)
+    X_train = nsd(X_train, mode='standard', flag=False)
+    X_test = nsd(X_test, mode='standard', flag=False)
 
     y_pred, w_norm_std = pred_log(logreg, X_train, y_train, X_test)  # fill it with the nsd function
 
     print("Accuracy is: " + str("{0:.2f}".format(100 * metrics.accuracy_score(y_test, y_pred))) + "%")
     print("F1 score is: " + str("{0:.2f}".format(100 * metrics.f1_score(y_test, y_pred, average='macro'))) + "%")
-    #
-    # #####################################
-    #
+
+    #####################################
+
     input_mat = w_norm_std  # Fill this argument
     w_no_p_table(input_mat, orig_feat)
-    #
-    # #####################################
+
+    #####################################
     #
     # cnf_matrix = metrics.confusion_matrix(y_test, y_pred)
     # ax = plt.subplot()

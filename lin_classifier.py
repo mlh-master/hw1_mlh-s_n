@@ -6,8 +6,6 @@ from sklearn.linear_model import LogisticRegression
 import pandas as pd
 import scipy.stats as stats
 from clean_data import norm_standard as nsd
-from clean_data import norm_standard as nsd
-from clean_data import rm_outlier
 
 
 def pred_log(logreg, X_train, y_train, X_test, flag=False):
@@ -25,7 +23,7 @@ def pred_log(logreg, X_train, y_train, X_test, flag=False):
     y_pred_log = np.argmax(w_log.predict_proba(X_test), axis = 1)
     y_pred_log += 1
     w_log = w_log.coef_
-    w_log = pd.DataFrame(w_log,columns=X_train.columns)
+
 
 
     return y_pred_log, w_log
@@ -105,6 +103,7 @@ def odds_ratio(w, X, selected_feat='LB'):
              odds_ratio: the odds ratio of the selected feature and label
     """
 
+    w = pd.DataFrame(w, columns=X.columns)
     odd_ratio = np.exp(w.at[0,selected_feat])
     odds = np.median(np.exp(X @ np.transpose(w.iloc[0,:])))
 

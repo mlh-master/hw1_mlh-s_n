@@ -144,8 +144,11 @@ def norm_standard(CTG_features, selected_feat=('LB', 'ASTV'), mode='none', flag=
             nsd_res[column_name] = (CTG_features[column_name] - CTG_features_stat[column_name]['mean'])/(CTG_features_stat[column_name]['max']-CTG_features_stat[column_name]['min'])
 
     if flag == True:
-        nsd_res[x].hist(bins=100)
-        nsd_res[y].hist(bins=100)
+        nsd_res[x].hist(bins=100, label=x)
+        nsd_res[y].hist(bins=100, label=y)
+        plt.legend()
+        plt.xlabel('Histogram Width')
+        plt.ylabel('Count')
         plt.show()
 
     return pd.DataFrame(nsd_res)
