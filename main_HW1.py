@@ -201,9 +201,9 @@ if __name__ == '__main__':
     mode = 'MinMax'  # choose a mode from the `nsd`
     X_train = nsd(X_train, mode='standard', flag=False)
     X_test = nsd(X_test, mode='standard', flag=False)
-
+    #y_pred, w_norm_std = pred_log(logreg, nsd(X_train, mode=mode), y_train, nsd(X_test, mode=mode), flag=False)
     y_pred, w_norm_std = pred_log(logreg, X_train, y_train, X_test)  # fill it with the nsd function
-
+    print(w_norm_std)
     print("Accuracy is: " + str("{0:.2f}".format(100 * metrics.accuracy_score(y_test, y_pred))) + "%")
     print("F1 score is: " + str("{0:.2f}".format(100 * metrics.f1_score(y_test, y_pred, average='macro'))) + "%")
 
@@ -214,12 +214,12 @@ if __name__ == '__main__':
 
     #####################################
     #
-    # cnf_matrix = metrics.confusion_matrix(y_test, y_pred)
-    # ax = plt.subplot()
-    # sns.heatmap(cnf_matrix, annot=True, xticklabels=['Normal', 'Suspect', 'Pathology'],
-    #             yticklabels=['Normal', 'Suspect', 'Pathology'])
-    # ax.set(ylabel='True labels', xlabel='Predicted labels')
-    # plt.show()
+    cnf_matrix = metrics.confusion_matrix(y_test, y_pred)
+    ax = plt.subplot()
+    sns.heatmap(cnf_matrix, annot=True, xticklabels=['Normal', 'Suspect', 'Pathology'],
+                yticklabels=['Normal', 'Suspect', 'Pathology'])
+    ax.set(ylabel='True labels', xlabel='Predicted labels')
+    plt.show()
     #
     # #####################################
     #
