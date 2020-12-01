@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-#test
+
 def rm_ext_and_nan(CTG_features, extra_feature):
     """
 
