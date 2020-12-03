@@ -182,7 +182,7 @@ if __name__ == '__main__':
     X_train, X_test, y_train, y_test = train_test_split(CTG_features, np.ravel(fetal_state), test_size=0.2,
                                                         random_state=0, stratify=np.ravel(fetal_state))
     logreg = LogisticRegression(solver='saga', multi_class='ovr', penalty='none', max_iter=10000)
-    y_pred, w = pred_log(logreg, X_train, y_train, X_test)
+    y_pred, w = pred_log(logreg, X_train, y_train, X_test, flag=False)
 
     print("Accuracy is: " + str("{0:.2f}".format(100 * metrics.accuracy_score(y_test, y_pred))) + "%")
     print("F1 score is: " + str("{0:.2f}".format(100 * metrics.f1_score(y_test, y_pred, average='macro'))) + "%")
@@ -201,9 +201,9 @@ if __name__ == '__main__':
     mode = 'MinMax'  # choose a mode from the `nsd`
     X_train = nsd(X_train, mode='standard', flag=False)
     X_test = nsd(X_test, mode='standard', flag=False)
-    #y_pred, w_norm_std = pred_log(logreg, nsd(X_train, mode=mode), y_train, nsd(X_test, mode=mode), flag=False)
-    y_pred, w_norm_std = pred_log(logreg, X_train, y_train, X_test)  # fill it with the nsd function
-    print(w_norm_std)
+
+    y_pred, w_norm_std = pred_log(logreg, X_train, y_train, X_test, flag=False)  # fill it with the nsd function
+
     print("Accuracy is: " + str("{0:.2f}".format(100 * metrics.accuracy_score(y_test, y_pred))) + "%")
     print("F1 score is: " + str("{0:.2f}".format(100 * metrics.f1_score(y_test, y_pred, average='macro'))) + "%")
 
@@ -213,64 +213,64 @@ if __name__ == '__main__':
     w_no_p_table(input_mat, orig_feat)
 
     #####################################
-    #
+
     cnf_matrix = metrics.confusion_matrix(y_test, y_pred)
     ax = plt.subplot()
     sns.heatmap(cnf_matrix, annot=True, xticklabels=['Normal', 'Suspect', 'Pathology'],
                 yticklabels=['Normal', 'Suspect', 'Pathology'])
     ax.set(ylabel='True labels', xlabel='Predicted labels')
     plt.show()
-    #
+
     # #####################################
-    #
-    # mode = ''  # choose a mode from the `nsd`
-    # # complete the arguments for L2:
-    # logreg_l2 = LogisticRegression(penalty='l2', solver='saga', multi_class='ovr', max_iter=10000, )
-    # # complete the nsd function:
-    # y_pred_2, w2 = pred_log(logreg_l2, )
-    # cnf_matrix = metrics.confusion_matrix(y_test, y_pred_2)
-    # ax1 = plt.subplot(211)
-    # sns.heatmap(cnf_matrix, annot=True, xticklabels=['Normal', 'Suspect', 'Pathology'],
-    #             yticklabels=['Normal', 'Suspect', 'Pathology'])
-    # ax1.set(ylabel='True labels', xlabel='Predicted labels')
-    #
-    # #####################################
-    #
-    # # complete the arguments for L1:
-    # logreg_l1 = LogisticRegression(penalty='l1', solver='saga', multi_class='ovr', max_iter=10000, )
-    # # complete this function using nsd function:
-    # y_pred_1, w1 = pred_log(logreg_l1, )
-    # cnf_matrix = metrics.confusion_matrix(y_test, y_pred_1)
-    # ax2 = plt.subplot(212)
-    # sns.heatmap(cnf_matrix, annot=True, xticklabels=['Normal', 'Suspect', 'Pathology'],
-    #             yticklabels=['Normal', 'Suspect', 'Pathology'])
-    # ax2.set(ylabel='True labels', xlabel='Predicted labels')
-    # plt.show()
-    #
-    # #####################################
-    #
-    # w_all_tbl(w2, w1, orig_feat)
-    #
-    # #####################################
-    #
-    # C = []  # make a list of up to 6 different values of regularization parameters and examine their
-    # # effects
-    # K =   # choose a number of folds
-    # mode = ''  # mode of nsd function
-    # val_dict = cv_kfold(X_train, y_train, C=C, penalty=['l1', 'l2'], K=K, mode=mode)
-    #
-    # #####################################
-    #
-    # for d in val_dict:
-    #     x = np.linspace(0, d['mu'] + 3 * d['sigma'], 1000)
-    #     plt.plot(x, stats.norm.pdf(x, d['mu'], d['sigma']), label="p = " + d['penalty'] + ", C = " + str(d['C']))
-    #     plt.title('Gaussian distribution of the loss')
-    #     plt.xlabel('Average loss')
-    #     plt.ylabel('Probability density')
-    # plt.legend()
-    # plt.show()
-    #
-    # #####################################
+
+    mode = 'MinMax'  # choose a mode from the `nsd`
+    # complete the arguments for L2:
+    logreg_l2 = LogisticRegression(penalty='l2', solver='saga', multi_class='ovr', max_iter=10000, C= 0.006)
+    # complete the nsd function:
+    y_pred_2, w2 = pred_log(logreg_l2, X_train, y_train, X_test, flag= False)
+    cnf_matrix = metrics.confusion_matrix(y_test, y_pred_2)
+    ax1 = plt.subplot(211)
+    sns.heatmap(cnf_matrix, annot=True, xticklabels=['Normal', 'Suspect', 'Pathology'],
+                yticklabels=['Normal', 'Suspect', 'Pathology'])
+    ax1.set(ylabel='True labels', xlabel='Predicted labels')
+
+    #####################################
+
+    # complete the arguments for L1:
+    logreg_l1 = LogisticRegression(penalty='l1', solver='saga', multi_class='ovr', max_iter=10000, C=0.9)
+    # complete this function using nsd function:
+    y_pred_1, w1 = pred_log(logreg_l1, X_train, y_train, X_test, flag= False)
+    cnf_matrix = metrics.confusion_matrix(y_test, y_pred_1)
+    ax2 = plt.subplot(212)
+    sns.heatmap(cnf_matrix, annot=True, xticklabels=['Normal', 'Suspect', 'Pathology'],
+                yticklabels=['Normal', 'Suspect', 'Pathology'])
+    ax2.set(ylabel='True labels', xlabel='Predicted labels')
+    plt.show()
+
+    #####################################
+
+    w_all_tbl(w2, w1, orig_feat)
+
+    #####################################
+
+    C = [0.0001, 0.001, 0.01, 10, 100, 1000, 10000]  # make a list of up to 6 different values of regularization parameters and examine their
+    # effects
+    K = 4  # choose a number of folds
+    mode = 'MinMax'  # mode of nsd function
+    val_dict = cv_kfold(X_train, y_train, C=C, penalty=['l1', 'l2'], K=K, mode=mode)
+    print (val_dict)
+    #####################################
+
+    for d in val_dict:
+        x = np.linspace(0, d['mu'] + 3 * d['sigma'], 1000)
+        plt.plot(x, stats.norm.pdf(x, d['mu'], d['sigma']), label="p = " + d['penalty'] + ", C = " + str(d['C']))
+        plt.title('Gaussian distribution of the loss')
+        plt.xlabel('Average loss')
+        plt.ylabel('Probability density')
+    plt.legend()
+    plt.show()
+
+    #####################################
     #
     # C =   # complete this part according to your best result
     # penalty = ''  # complete this part according to your best result
