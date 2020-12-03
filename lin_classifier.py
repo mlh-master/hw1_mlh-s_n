@@ -82,15 +82,25 @@ def cv_kfold(X, y, C, penalty, K, mode):
     :param mode: Mode of normalization (parameter of norm_standard function in clean_data module)
     :return: A dictionary as explained in the notebook
     """
+
     kf = SKFold(n_splits=K)
+<<<<<<< HEAD
     validation_dict = []
    
+=======
+    validation_dict = ({"C":{}, "penalty":{}, "mu":{}, "sigma":{}}) #14 rows
+
+    X = nsd(X, mode='standard', flag=False)
+
+    i = 0
+>>>>>>> 00956d8a52b186c026f8266d239577bf9cc9374a
     for c in C:
         for p in penalty:
             logreg = LogisticRegression(solver='saga', penalty=p, C=c, max_iter=10000, multi_class='ovr')
             loss_train_vec = np.zeros(K)
             loss_val_vec = np.zeros(K)
 
+<<<<<<< HEAD
             #k = 0
             for train_idx, val_idx in kf.split(X, y):
                 x_train, x_val = X.iloc[train_idx], X.iloc[val_idx]
@@ -105,6 +115,27 @@ def cv_kfold(X, y, C, penalty, K, mode):
                 y_pred_val = logreg.predict_proba(x_val)
                 loss_train_vec[k] = log_loss(y_train, y_pred_train)
                 loss_val_vec[k] = log_loss(y_val, y_pred_val)
+=======
+            k = 0
+
+            for train_idx, val_idx in kf.split(X, y):
+                x_train, x_val = X.iloc[train_idx], X.iloc[val_idx]
+                y_train, y_val = y[train_idx], y[val_idx]
+
+                logreg.fit(x_train, y_train)
+
+                y_pred_train = logreg.predict_proba(x_train)
+                y_pred_val = logreg.predict_proba(x_val)
+                loss_train_vec[k] = log_loss(y_train, y_pred_train)
+                loss_val_vec[k] = log_loss(y_val, y_pred_val)
+
+                k += 1
+
+            loss_val_vec[0] = loss_val_vec.mean()
+            loss_val_vec[1] = loss_val_vec.std()
+            validation_dict[i] = [c, p,  loss_val_vec[0], loss_val_vec[1]]
+            i+=1
+>>>>>>> 00956d8a52b186c026f8266d239577bf9cc9374a
 
     return validation_dict
 
