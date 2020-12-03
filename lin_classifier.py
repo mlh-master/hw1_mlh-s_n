@@ -8,7 +8,7 @@ import scipy.stats as stats
 from clean_data import norm_standard as nsd
 
 
-def pred_log(logreg, X_train, y_train, X_test, flag=False):
+def pred_log(logreg, X_train, y_train, X_test, flag):
     """
 
     :param logreg: An object of the class LogisticRegression
@@ -20,11 +20,15 @@ def pred_log(logreg, X_train, y_train, X_test, flag=False):
     """
 
     w_log = logreg.fit(X_train, y_train)
-    y_pred_log = np.argmax(w_log.predict_proba(X_test), axis = 1)
-    y_pred_log += 1
+
+
+    if flag == True:
+        y_pred_log = np.max(logreg.predict_proba(X_test), axis = 1)
+    else:
+        y_pred_log = np.argmax(w_log.predict_proba(X_test), axis = 1)
+        y_pred_log += 1
+
     w_log = w_log.coef_
-
-
 
     return y_pred_log, w_log
 
@@ -80,16 +84,28 @@ def cv_kfold(X, y, C, penalty, K, mode):
     """
     kf = SKFold(n_splits=K)
     validation_dict = []
+   
     for c in C:
         for p in penalty:
             logreg = LogisticRegression(solver='saga', penalty=p, C=c, max_iter=10000, multi_class='ovr')
+            loss_train_vec = np.zeros(K)
             loss_val_vec = np.zeros(K)
-            k = 0
+
+            #k = 0
             for train_idx, val_idx in kf.split(X, y):
                 x_train, x_val = X.iloc[train_idx], X.iloc[val_idx]
-        # ------------------ IMPLEMENT YOUR CODE HERE:-----------------------------
+                y_train, y_val = y.iloc[train_idx], y.iloc[val_idx]
 
-        # --------------------------------------------------------------------------
+                x_train_fold = nsd.fit_transform( x_train_fold, mode=mode,flag= False)
+                x_val = nsd.transform(x_val, mode=mode, flag= False)
+
+                logreg.fit(x_train, y_train)
+
+                y_pred_train = logreg.predict_proba(x_train_fold)
+                y_pred_val = logreg.predict_proba(x_val)
+                loss_train_vec[k] = log_loss(y_train, y_pred_train)
+                loss_val_vec[k] = log_loss(y_val, y_pred_val)
+
     return validation_dict
 
 

@@ -127,6 +127,7 @@ def norm_standard(CTG_features, selected_feat=('LB', 'ASTV'), mode='none', flag=
 
 
     x, y = selected_feat
+
     nsd_res = pd.DataFrame()
     CTG_features_stat = CTG_features.describe()
 
