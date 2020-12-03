@@ -271,8 +271,6 @@ if __name__ == '__main__':
     # plt.legend()
     # plt.show()
     #
-=======
->>>>>>> 00956d8a52b186c026f8266d239577bf9cc9374a
     # #####################################
 
     mode = 'MinMax'  # choose a mode from the `nsd`
