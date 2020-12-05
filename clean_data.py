@@ -106,9 +106,7 @@ def phys_prior(c_cdf, feature, thresh):
     filt_feature = []
 
     for index in c_cdf[feature].index:
-        # print(c_cdf.loc[index,feature])
         if (c_cdf.loc[index, feature].astype(float) <= thresh):
-            # print(c_cdf.loc[index,feature].astype(float))
             filt_feature.append(c_cdf.loc[index, feature])
     filt_feature = np.asarray(filt_feature)
 

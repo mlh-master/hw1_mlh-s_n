@@ -72,7 +72,7 @@ if __name__ == '__main__':
 
     extra_feature = 'DR'
     c_samp = nan2num_samp(CTG_features, extra_feature)
-    print(c_samp)
+
 
     # #####################################
 
@@ -127,7 +127,7 @@ if __name__ == '__main__':
     feature = 'UC'
     thresh = 10  # Uterine contraction cannot be more then 10 contractions per 10 minutes.
     filt_feature = phpr(c_samp, feature, thresh)
-    print(filt_feature)
+
 
     #####################################
 
@@ -221,7 +221,6 @@ if __name__ == '__main__':
     ax.set(ylabel='True labels', xlabel='Predicted labels')
     plt.show()
 
-<<<<<<< HEAD
     # #####################################
 
     mode = 'MinMax'  # choose a mode from the `nsd`
@@ -254,56 +253,7 @@ if __name__ == '__main__':
 
     #####################################
 
-    C = [0.0001, 0.001, 0.01, 10, 100, 1000, 10000]  # make a list of up to 6 different values of regularization parameters and examine their
-    # effects
-    K = 2  # choose a number of folds
-    mode = 'MinMax'  # mode of nsd function
-    val_dict = cv_kfold(X_train, y_train, C=C, penalty=['l1', 'l2'], K=K, mode=mode)
-
-    # #####################################
-    #
-    # for d in val_dict:
-    #     x = np.linspace(0, d['mu'] + 3 * d['sigma'], 1000)
-    #     plt.plot(x, stats.norm.pdf(x, d['mu'], d['sigma']), label="p = " + d['penalty'] + ", C = " + str(d['C']))
-    #     plt.title('Gaussian distribution of the loss')
-    #     plt.xlabel('Average loss')
-    #     plt.ylabel('Probability density')
-    # plt.legend()
-    # plt.show()
-    #
-    # #####################################
-
-    mode = 'MinMax'  # choose a mode from the `nsd`
-    # complete the arguments for L2:
-    logreg_l2 = LogisticRegression(penalty='l2', solver='saga', multi_class='ovr', max_iter=10000, C= 0.006)
-    # complete the nsd function:
-    y_pred_2, w2 = pred_log(logreg_l2, X_train, y_train, X_test, flag= False)
-    cnf_matrix = metrics.confusion_matrix(y_test, y_pred_2)
-    ax1 = plt.subplot(211)
-    sns.heatmap(cnf_matrix, annot=True, xticklabels=['Normal', 'Suspect', 'Pathology'],
-                yticklabels=['Normal', 'Suspect', 'Pathology'])
-    ax1.set(ylabel='True labels', xlabel='Predicted labels')
-
-    #####################################
-
-    # complete the arguments for L1:
-    logreg_l1 = LogisticRegression(penalty='l1', solver='saga', multi_class='ovr', max_iter=10000, C=0.9)
-    # complete this function using nsd function:
-    y_pred_1, w1 = pred_log(logreg_l1, X_train, y_train, X_test, flag= False)
-    cnf_matrix = metrics.confusion_matrix(y_test, y_pred_1)
-    ax2 = plt.subplot(212)
-    sns.heatmap(cnf_matrix, annot=True, xticklabels=['Normal', 'Suspect', 'Pathology'],
-                yticklabels=['Normal', 'Suspect', 'Pathology'])
-    ax2.set(ylabel='True labels', xlabel='Predicted labels')
-    plt.show()
-
-    #####################################
-
-    w_all_tbl(w2, w1, orig_feat)
-
-    #####################################
-
-    C = [0.0001, 0.001, 0.01, 10, 100, 1000, 10000]  # make a list of up to 6 different values of regularization parameters and examine their
+    C = [0.1,0.5,2,4,9,13]  # make a list of up to 6 different values of regularization parameters and examine their
     # effects
     K = 4  # choose a number of folds
     mode = 'MinMax'  # mode of nsd function
@@ -321,32 +271,32 @@ if __name__ == '__main__':
     plt.show()
 
     #####################################
-    #
-    # C =   # complete this part according to your best result
-    # penalty = ''  # complete this part according to your best result
-    # logreg = LogisticRegression(solver='saga', multi_class='ovr', penalty=penalty, C=C, max_iter=10000)
-    # y_pred, w = pred_log(logreg, )  # complete this function using nsd function
-    #
-    # cnf_matrix = metrics.confusion_matrix(y_test, y_pred)
-    # ax1 = plt.subplot(211)
-    # sns.heatmap(cnf_matrix, annot=True, xticklabels=['Normal', 'Suspect', 'Pathology'],
-    #             yticklabels=['Normal', 'Suspect', 'Pathology'])
-    # ax1.set(ylabel='True labels', xlabel='Predicted labels')
-    # plt.show()
-    # print("Accuracy is: " + str("{0:.2f}".format(100 * metrics.accuracy_score(y_test, y_pred))) + "%")
-    # print("F1 score is: " + str("{0:.2f}".format(100 * metrics.f1_score(y_test, y_pred, average='macro'))) + "%")
-    #
-    # #####################################
-    #
-    # mode = 'MinMax'
-    # clf = rfc(n_estimators=10)
-    # clf.fit(nsd(X_train, mode=mode), y_train)
-    # y_pred = clf.predict(nsd(X_test, mode=mode))
-    # cnf_matrix = metrics.confusion_matrix(y_test, y_pred)
-    # ax = plt.subplot()
-    # sns.heatmap(cnf_matrix, annot=True, xticklabels=['Normal', 'Suspect', 'Pathology'],
-    #             yticklabels=['Normal', 'Suspect', 'Pathology'])
-    # ax.set(ylabel='True labels', xlabel='Predicted labels')
-    # plt.show()
-    # print("Accuracy is: " + str("{0:.2f}".format(100 * metrics.accuracy_score(y_test, y_pred))) + "%")
-    # print("F1 score is: " + str("{0:.2f}".format(100 * metrics.f1_score(y_test, y_pred, average='macro'))) + "%")
+
+    C = 2  # complete this part according to your best result
+    penalty = 'l2'  # complete this part according to your best result
+    logreg = LogisticRegression(solver='saga', multi_class='ovr', penalty=penalty, C=C, max_iter=10000)
+    y_pred, w = pred_log(logreg, nsd(X_train,selected_feat=('LB', 'ASTV'), mode=mode, flag = False), y_train, nsd(X_test, selected_feat=('LB', 'ASTV'),mode=mode, flag = False), flag = False)  # complete this function using nsd function
+
+    cnf_matrix = metrics.confusion_matrix(y_test, y_pred)
+    ax1 = plt.subplot(211)
+    sns.heatmap(cnf_matrix, annot=True, xticklabels=['Normal', 'Suspect', 'Pathology'],
+                yticklabels=['Normal', 'Suspect', 'Pathology'])
+    ax1.set(ylabel='True labels', xlabel='Predicted labels')
+    plt.show()
+    print("Accuracy is: " + str("{0:.2f}".format(100 * metrics.accuracy_score(y_test, y_pred))) + "%")
+    print("F1 score is: " + str("{0:.2f}".format(100 * metrics.f1_score(y_test, y_pred, average='macro'))) + "%")
+
+    #####################################
+
+    mode = 'MinMax'
+    clf = rfc(n_estimators=10)
+    clf.fit(nsd(X_train, mode=mode), y_train)
+    y_pred = clf.predict(nsd(X_test, mode=mode))
+    cnf_matrix = metrics.confusion_matrix(y_test, y_pred)
+    ax = plt.subplot()
+    sns.heatmap(cnf_matrix, annot=True, xticklabels=['Normal', 'Suspect', 'Pathology'],
+                yticklabels=['Normal', 'Suspect', 'Pathology'])
+    ax.set(ylabel='True labels', xlabel='Predicted labels')
+    plt.show()
+    print("Accuracy is: " + str("{0:.2f}".format(100 * metrics.accuracy_score(y_test, y_pred))) + "%")
+    print("F1 score is: " + str("{0:.2f}".format(100 * metrics.f1_score(y_test, y_pred, average='macro'))) + "%")
